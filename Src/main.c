@@ -94,6 +94,9 @@ int main(void)
 
   /* USER CODE END 2 */
 
+  /*HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout); */
+  /*HAL_I2C_Master_Receive(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout); */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -101,7 +104,10 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+	  		HAL_Delay(50);
+	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  		HAL_Delay(50);
   }
   /* USER CODE END 3 */
 
