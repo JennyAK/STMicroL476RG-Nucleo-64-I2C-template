@@ -61,7 +61,7 @@ static void MX_GPIO_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+#define I2C_ADDRESS (0x1E)
 /* USER CODE END 0 */
 
 int main(void)
@@ -91,11 +91,54 @@ int main(void)
   MX_GPIO_Init();
 
   /* USER CODE BEGIN 2 */
+  I2C_HandleTypeDef I2cHandle;
+  /*  //Write CRA (00) write 0x3C 0x00 0x18 (1-avg, 55 Hz, normal measurement)
+  Wire.write(0x3C);
+  Wire.write(0x00);
+  Wire.write(0x10);
+delay(20);
+  //Write CRB (01) – write 0x3C 0x01 0x20 (Gain=1.3, the default)
+  Wire.write(0x3C);
+  Wire.write(0x01);
+  Wire.write(0x20);
+delay(20);
+  //Write Mode (02) – write 0x3C 0x02 0x00 (Continuous-measurement mode)
+  Wire.write(0x3C);
+  Wire.write(0x02);
+  Wire.write(0x00);
+  delay(60); */
+
+
+   uint8_t count = 0;
+   char data[2];
+
+   data[0] = 0x00;
+   data[1] = 0x10;
+   HAL_I2C_Master_Transmit(&I2cHandle, (uint16_t) (I2C_ADDRESS), (uint8_t *) data, 2, 1000);
+
+   data[0] = 0x01;
+   data[1] = 0x20;
+   HAL_I2C_Master_Transmit(&I2cHandle, (uint16_t) (I2C_ADDRESS), (uint8_t *) data, 2, 1000);
+
+   data[0] = 0x02;
+   data[1] = 0x00;
+   HAL_I2C_Master_Transmit(&I2cHandle, (uint16_t) (I2C_ADDRESS), (uint8_t *) data, 2, 1000);
+
+   char xMag[2];
+   xMag[0] = 0x00;
+   xMag[1] = 0x01;
+   uint8_t reg = 0x03;
+   HAL_I2C_Master_Transmit(&I2cHandle, (uint16_t) (I2C_ADDRESS), &reg, 1, 1000);
+   HAL_I2C_Master_Receive(&I2cHandle, (uint16_t) (I2C_ADDRESS), (uint8_t *) xMag, 2, 1000);
+
+ /*  uint8_t xMsb = 0;
+   uint8_t xLsb = 0;
+   HAL_I2C_Mem_Read(&I2cHandle, I2C_ADDRESS, 0x03, I2C_MEMADD_SIZE_8BIT, &xMsb, sizeof(uint16_t), 100); */
 
   /* USER CODE END 2 */
 
-  /*HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout); */
-  /*HAL_I2C_Master_Receive(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout); */
+  // HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+  // HAL_I2C_Master_Receive(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -104,12 +147,13 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+  // HAL_I2C_Master_Receive(*hi2c1, DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout);
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 	  		HAL_Delay(50);
 	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  		HAL_Delay(50);
   }
-  /* USER CODE END 3 */
+//   USER CODE END 3
 
 }
 
